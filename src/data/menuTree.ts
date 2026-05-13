@@ -68,7 +68,7 @@ export const softwareTree: TreeNode = {
 
 export const subscriptionsTree: TreeNode = {
   id: 30,
-  label: "Suscripciones",
+  label: "Suscriptions",
 
   children: [
     {
