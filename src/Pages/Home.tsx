@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useAuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button, Container } from "react-bootstrap";
+import Carousel from "react-bootstrap/Carousel";
+
 import "../styles/Home.css";
 
 import {
@@ -9,6 +11,9 @@ import {
   softwareTree,
   subscriptionsTree,
 } from "../data/menuTree";
+
+import { carouselItems } from "../data/carouselData";
+import { storeProducts } from "../data/storeData";
 
 const Home = () => {
   const { user, logout } = useAuthContext();
@@ -23,18 +28,26 @@ const Home = () => {
 
   const handleMenuClick = (menu: string) => {
 
-  // SI YA ESTÁ ABIERTO → CERRAR
-  if (activeMenu === menu) {
-    setActiveMenu(null);
-    setHoveredMenu(null);
-    return;
-  }
+    if (activeMenu === menu) {
+      setActiveMenu(null);
+      setHoveredMenu(null);
+      return;
+    }
 
-  // ABRIR NUEVO MENU
-  setActiveMenu(menu);
-};
+    setActiveMenu(menu);
+  };
 
   const currentMenu = hoveredMenu || activeMenu;
+
+  // ================= FILTROS =================
+
+  const bestSellers = storeProducts.filter(
+    (product) => product.bestSeller
+  );
+
+  const featuredProducts = storeProducts.filter(
+    (product) => product.featured
+  );
 
   return (
     <Container fluid className="home-container">
@@ -208,6 +221,111 @@ const Home = () => {
 
         </div>
       )}
+
+      {/* HERO */}
+      <div className="hero-section">
+
+        <div className="hero-carousel-container">
+
+          <Carousel
+            fade
+            indicators={true}
+            controls={true}
+            interval={3500}
+          >
+
+            {carouselItems.map((item) => (
+
+              <Carousel.Item key={item.id}>
+
+                <div className="hero-slide">
+
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="hero-image"
+                  />
+
+                  <div className="hero-overlay">
+
+                    <span className="hero-subtitle">
+                      {item.subtitle}
+                    </span>
+
+                    <h2>{item.title}</h2>
+
+                    <Button
+                      className="hero-button"
+                      onClick={() => alert(item.title)}
+                    >
+                      Ver más
+                    </Button>
+
+                  </div>
+
+                </div>
+
+              </Carousel.Item>
+
+            ))}
+
+          </Carousel>
+
+        </div>
+
+      </div>
+
+      {/* MÁS VENDIDOS */}
+      <div className="products-section">
+
+        <div className="section-header">
+          <h2>🔥 Más vendidos</h2>
+        </div>
+
+        <div className="products-grid">
+
+          {bestSellers.map((product) => (
+
+            <div
+              key={product.id}
+              className="product-card"
+            >
+
+              <div className="product-image-container">
+
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="product-image"
+                />
+
+              </div>
+
+              <div className="product-info">
+
+                <h3>{product.title}</h3>
+
+                <span className="product-platform">
+                  {product.platform}
+                </span>
+
+                <p className="product-description">
+                  {product.description}
+                </p>
+
+                <div className="product-price">
+                  {product.price}
+                </div>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
 
     </Container>
   );
