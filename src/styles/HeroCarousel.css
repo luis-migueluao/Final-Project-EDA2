@@ -1,0 +1,148 @@
+/* ================= HERO ================= */
+
+.hero-section {
+  width: 100%;
+  padding: 30px 0;
+}
+
+.hero-carousel-container {
+  width: 92%;
+  margin: auto;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.hero-slide {
+  position: relative;
+  height: 520px;
+}
+
+.hero-image {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 100px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.05)
+  );
+}
+
+.hero-subtitle {
+  color: #2196f3;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.hero-overlay h2 {
+  font-size: 68px;
+  font-weight: 900;
+  max-width: 650px;
+  margin-bottom: 25px;
+  color: white;
+}
+
+
+.hero-button {
+  width: 180px;
+  height: 52px;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  background: #2196f3 !important;
+
+  font-size: 18px !important;
+  font-weight: 700 !important;
+
+  transition: 0.25s;
+}
+
+.hero-button:hover {
+  background: #42a5f5 !important;
+  transform: translateY(-2px);
+}
+
+/* ================= FLECHAS ================= */
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 120px;
+  opacity: 1;
+}
+
+
+.carousel-control-prev {
+  left: -100px !important;
+}
+
+.carousel-control-next {
+  right: -100px !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 40px !important;
+  height: 40px !important;
+  transition: 0.2s;
+}
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+  transform: scale(1.1);
+}
+
+/* ================= INDICADORES ================= */
+
+.carousel-indicators [data-bs-target] {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .hero-slide {
+    height: 350px;
+  }
+
+  .hero-image {
+    height: 350px;
+  }
+
+  .hero-overlay {
+    padding: 30px;
+  }
+
+  .hero-overlay h2 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 500px) {
+  .hero-overlay h2 {
+    font-size: 28px;
+  }
+}
