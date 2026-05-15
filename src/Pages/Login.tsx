@@ -48,7 +48,7 @@ const Login = () => {
       <Card className="auth-card">
 
         <h1 className="auth-logo">
-          GAMESTORE
+          LOGO
         </h1>
 
         <h3 className="auth-title">

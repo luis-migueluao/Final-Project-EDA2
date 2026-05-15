@@ -3,6 +3,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Home from "./Pages/Home";
 import { AuthProvider } from "./Context/AuthContext";
+import ProductDescription from "./Pages/ProductDescription";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
 
           {/* públicas */}
+          <Route path="/product/:id" element={<ProductDescription />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

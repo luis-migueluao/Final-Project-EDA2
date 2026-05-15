@@ -19,7 +19,7 @@ const Header = ({ resetAll }: HeaderProps) => {
   return (
     <div className="home-header">
       <div className="logo-section" onClick={resetAll}>
-        <h1 className="logo">GAMESTORE</h1>
+        <h1 className="logo">LOGO</h1>
       </div>
 
       <div className="search-container">
