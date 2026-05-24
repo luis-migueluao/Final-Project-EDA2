@@ -1,5 +1,10 @@
-import { useState } from "react";
-import { Container } from "react-bootstrap";
+import {
+  useState,
+} from "react";
+
+import {
+  Container,
+} from "react-bootstrap";
 
 import "../styles/Home.css";
 
@@ -8,77 +13,144 @@ import Menu from "../Components/Menu";
 import HeroCarousel from "../Components/HeroCarousel";
 import ProductsSection from "../Components/ProductsSection";
 
-import { storeProducts } from "../data/storeData";
+import {
+  storeProducts,
+} from "../data/storeData";
 
 const Home = () => {
 
-  const [hoverMenu, setHoverMenu] = useState<string | null>(null);
+  const [hoverMenu, setHoverMenu] =
+    useState<string | null>(null);
 
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] =
+    useState<string | null>(null);
 
-  const [activeSub, setActiveSub] = useState<string | null>(null);
+  const [activeSub, setActiveSub] =
+    useState<string | null>(null);
 
-  const handleCategoryClick = (category: string) => {
+  // ================= MENU =================
+
+  const handleCategoryClick = (
+    category: string
+  ) => {
+
     setActiveCategory(category);
+
     setActiveSub(null);
+
     setHoverMenu(null);
   };
 
-  const handleSubClick = (sub: string) => {
-    const subLower = sub.toLowerCase();
+  const handleSubClick = (
+    sub: string
+  ) => {
 
-    const foundProduct = storeProducts.find((p) =>
-      p.subCategory.includes(subLower)
-    );
+    const subLower =
+      sub.toLowerCase();
+
+    const foundProduct =
+      storeProducts.find((p) =>
+
+        p.subCategory.includes(
+          subLower
+        )
+      );
 
     if (foundProduct) {
-      setActiveCategory(foundProduct.category);
+
+      setActiveCategory(
+        foundProduct.category
+      );
     }
 
     setActiveSub(subLower);
+
     setHoverMenu(null);
   };
+
+  // ================= RESET =================
 
   const resetAll = () => {
+
     setActiveCategory(null);
+
     setActiveSub(null);
+
     setHoverMenu(null);
   };
 
-  const filteredProducts = storeProducts.filter((product) => {
+  // ================= FILTER =================
 
-    const matchCategory =
-      !activeCategory ||
-      product.category === activeCategory;
+  const filteredProducts =
+    storeProducts.filter(
+      (product) => {
 
-    const matchSub =
-      !activeSub ||
-      product.subCategory.includes(activeSub);
+        const matchCategory =
 
-    return matchCategory && matchSub;
-  });
+          !activeCategory ||
+
+          product.category ===
+            activeCategory;
+
+        const matchSub =
+
+          !activeSub ||
+
+          product.subCategory.includes(
+            activeSub
+          );
+
+        return (
+          matchCategory &&
+          matchSub
+        );
+      }
+    );
 
   return (
-    <Container fluid className="home-container">
 
-      <Header resetAll={resetAll} />
+    <Container
+      fluid
+      className="home-container"
+    >
 
+      {/* HEADER */}
+      <Header
+        resetAll={resetAll}
+      />
+
+      {/* MENU */}
       <Menu
         hoverMenu={hoverMenu}
         setHoverMenu={setHoverMenu}
         activeCategory={activeCategory}
-        handleCategoryClick={handleCategoryClick}
-        handleSubClick={handleSubClick}
+        handleCategoryClick={
+          handleCategoryClick
+        }
+        handleSubClick={
+          handleSubClick
+        }
       />
 
-      {!activeCategory && !activeSub && (
+      {/* HERO */}
+      {!activeCategory &&
+        !activeSub && (
+
         <HeroCarousel />
+
       )}
 
+      {/* PRODUCTS */}
       <ProductsSection
-        products={filteredProducts}
-        activeCategory={activeCategory}
-        activeSub={activeSub}
+        products={
+          filteredProducts
+        }
+        activeCategory={
+          activeCategory
+        }
+        activeSub={
+          activeSub
+        }
       />
 
     </Container>

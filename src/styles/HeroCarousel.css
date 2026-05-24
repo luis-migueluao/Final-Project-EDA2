@@ -14,36 +14,88 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
-.hero-slide {
+/* El viewport es la ventana fija que esconde lo que se sale de los bordes */
+.hero-slides-viewport {
   position: relative;
   height: 520px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* EL RIEL: Conecta los paneles de forma horizontal */
+.hero-slides-track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+}
+
+/* CONFIGURACIÓN DE PANELES EN EL RIEL */
+.hero-slide-panel {
+  width: 100%;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+/* Cuando solo hay una diapositiva en pantalla (estado de reposo) */
+.hero-slides-track.is-single {
+  transform: translateX(0%);
+}
+
+/* ================= COMPORTAMIENTO DEL SLIDE (MERCADO LIBRE STYLE) ================= */
+
+/* Hacia adelante: El panel viejo está en 0%, el nuevo se crea a la derecha. 
+   Estado inicial antes de arrancar el movimiento */
+.hero-slides-track.is-duo.dir-next {
+  transform: translateX(0%);
+}
+
+/* Ejecución hacia adelante: Se desplaza una pantalla completa hacia la izquierda (-100%) */
+.hero-slides-track.is-duo.dir-next.is-moving {
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hacia atrás: El panel nuevo se crea a la izquierda (-100%), el viejo queda a la derecha.
+   Estado inicial desplazado artificialmente para preparar la entrada */
+.hero-slides-track.is-duo.dir-prev {
+  transform: translateX(-100%);
+}
+
+/* Ejecución hacia atrás: Regresa al origen (0%) trayendo la diapositiva izquierda hacia el frente */
+.hero-slides-track.is-duo.dir-prev.is-moving {
+  transform: translateX(0%);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ================= DETALLES DE LA DIAPOSITIVA ================= */
+
+.hero-slide {
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .hero-image {
   width: 100%;
-  height: 520px;
+  height: 100%;
   object-fit: cover;
   filter: brightness(0.6);
 }
-
 
 .hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
-
   width: 100%;
   height: 100%;
-
   padding: 100px;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.55),
     rgba(0, 0, 0, 0.05)
   );
 }
@@ -61,21 +113,17 @@
   max-width: 650px;
   margin-bottom: 25px;
   color: white;
+  line-height: 1.1;
 }
-
 
 .hero-button {
   width: 180px;
   height: 52px;
-
   border: none !important;
   border-radius: 10px !important;
-
   background: #2196f3 !important;
-
   font-size: 18px !important;
   font-weight: 700 !important;
-
   transition: 0.25s;
 }
 
@@ -86,49 +134,66 @@
 
 /* ================= FLECHAS ================= */
 
-.carousel-control-prev,
-.carousel-control-next {
-  width: 120px;
-  opacity: 1;
+.hero-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 40px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease;
 }
 
-
-.carousel-control-prev {
-  left: -100px !important;
+.hero-carousel-control:hover {
+  transform: translateY(-50%) scale(1.2);
 }
 
-.carousel-control-next {
-  right: -100px !important;
+.hero-carousel-control-prev {
+  left: 16px;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 40px !important;
-  height: 40px !important;
-  transition: 0.2s;
-}
-
-.carousel-control-prev-icon:hover,
-.carousel-control-next-icon:hover {
-  transform: scale(1.1);
+.hero-carousel-control-next {
+  right: 16px;
 }
 
 /* ================= INDICADORES ================= */
 
-.carousel-indicators [data-bs-target] {
+.hero-carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.hero-indicator {
   width: 12px;
   height: 12px;
+  padding: 0;
+  border: none;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.hero-indicator.active,
+.hero-indicator:hover {
+  background: #2196f3;
+  transform: scale(1.15);
 }
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 900px) {
-  .hero-slide {
-    height: 350px;
-  }
-
-  .hero-image {
+  .hero-slides-viewport {
     height: 350px;
   }
 

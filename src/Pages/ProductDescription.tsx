@@ -8,40 +8,72 @@ import {
   useParams,
 } from "react-router-dom";
 
-import { storeProducts } from "../data/storeData";
+import {
+  storeProducts,
+} from "../data/storeData";
 
 import Header from "../Components/Header";
 import Menu from "../Components/Menu";
+
+import {
+  useCart,
+} from "../Context/CartContext";
 
 import "../styles/ProductDescription.css";
 
 const ProductDescription = () => {
 
-  const { id } = useParams();
+  const { id } =
+    useParams();
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
+
+  const {
+    addToCart,
+  } = useCart();
 
   // ================= MENU =================
 
-  const [hoverMenu, setHoverMenu] =
-    useState<string | null>(null);
+  const [hoverMenu,
+    setHoverMenu] =
+      useState<string | null>(
+        null
+      );
 
-  const [activeCategory, setActiveCategory] =
-    useState<string | null>(null);
+  const [activeCategory,
+    setActiveCategory] =
+      useState<string | null>(
+        null
+      );
 
   // ================= PRODUCT =================
 
-  const product = storeProducts.find(
-    (p) => p.id === Number(id)
-  );
+  const product =
+    storeProducts.find(
+      (p) =>
+        p.id === Number(id)
+    );
 
-  const [selectedImage, setSelectedImage] =
-    useState("");
+  const [selectedImage,
+    setSelectedImage] =
+      useState("");
 
+  // ================= FORMAT PRICE =================
+
+  const formatPrice = (
+    price: number
+  ) => {
+
+    return `$${price.toFixed(2)}`;
+  };
+
+  // ================= IMAGE =================
 
   useEffect(() => {
 
     if (product) {
+
       setSelectedImage(
         product.images[0]
       );
@@ -49,8 +81,15 @@ const ProductDescription = () => {
 
   }, [product]);
 
+  // ================= NOT FOUND =================
+
   if (!product) {
-    return <h1>Producto no encontrado</h1>;
+
+    return (
+      <h1>
+        Producto no encontrado
+      </h1>
+    );
   }
 
   // ================= MENU FUNCTIONS =================
@@ -59,21 +98,32 @@ const ProductDescription = () => {
     category: string
   ) => {
 
-    setActiveCategory(category);
+    setActiveCategory(
+      category
+    );
 
     navigate("/");
   };
 
-  const handleSubClick = (
-    sub: string
-  ) => {
+  const handleSubClick =
+    () => {
 
-    navigate("/");
-  };
+      navigate("/");
+    };
 
   const resetAll = () => {
 
     navigate("/");
+  };
+
+  // ================= BUY NOW FLOW =================
+
+  const handleBuyNow = () => {
+    // 1. Encola el producto usando tu estructura de datos del Context
+    addToCart(product);
+    
+    // 2. Redirecciona inmediatamente a la página del carrito
+    navigate("/cart");
   };
 
   // ================= RELATED =================
@@ -81,7 +131,10 @@ const ProductDescription = () => {
   const relatedProducts =
     storeProducts.filter(
       (p) =>
-        p.category === product.category &&
+
+        p.category ===
+          product.category &&
+
         p.id !== product.id
     );
 
@@ -90,13 +143,19 @@ const ProductDescription = () => {
     <div className="product-page">
 
       {/* HEADER */}
-      <Header resetAll={resetAll} />
+      <Header
+        resetAll={resetAll}
+      />
 
       {/* MENU */}
       <Menu
         hoverMenu={hoverMenu}
-        setHoverMenu={setHoverMenu}
-        activeCategory={activeCategory}
+        setHoverMenu={
+          setHoverMenu
+        }
+        activeCategory={
+          activeCategory
+        }
         handleCategoryClick={
           handleCategoryClick
         }
@@ -122,19 +181,27 @@ const ProductDescription = () => {
           <div className="product-gallery">
 
             {product.images.map(
-              (img, index) => (
+              (
+                img,
+                index
+              ) => (
 
                 <img
                   key={index}
                   src={img}
                   alt={product.title}
                   className={`gallery-image ${
-                    selectedImage === img
+                    selectedImage ===
+                    img
+
                       ? "active-gallery-image"
+
                       : ""
                   }`}
                   onClick={() =>
-                    setSelectedImage(img)
+                    setSelectedImage(
+                      img
+                    )
                   }
                 />
 
@@ -169,18 +236,44 @@ const ProductDescription = () => {
 
           {/* DESCRIPTION */}
           <p className="product-big-description">
+
             {product.fullDescription}
+
           </p>
 
           {/* PRICE */}
           <div className="product-price-big">
-            {product.price}
+
+            {formatPrice(
+              product.price
+            )}
+
           </div>
 
-          {/* BUTTON */}
-          <button className="buy-button">
-            Comprar ahora
-          </button>
+          {/* ACTIONS BUTTONS */}
+          <div className="product-actions-group" style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
+            
+            {/* AGREGAR AL CARRITO */}
+            <button
+              className="buy-button"
+              onClick={() =>
+                addToCart(
+                  product
+                )
+              }
+            >
+              Agregar al carrito
+            </button>
+
+            {/* COMPRAR AHORA */}
+            <button
+              className="buy-now-button"
+              onClick={handleBuyNow}
+            >
+              Comprar ahora
+            </button>
+
+          </div>
 
         </div>
 
@@ -209,7 +302,9 @@ const ProductDescription = () => {
               >
 
                 <img
-                  src={item.images[0]}
+                  src={
+                    item.images[0]
+                  }
                   alt={item.title}
                 />
 
@@ -220,7 +315,11 @@ const ProductDescription = () => {
                   </h3>
 
                   <span>
-                    {item.price}
+
+                    {formatPrice(
+                      item.price
+                    )}
+
                   </span>
 
                 </div>

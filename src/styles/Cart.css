@@ -1,0 +1,366 @@
+/* ================= GLOBAL & LAYOUT ================= */
+.cart-page {
+  min-height: 100vh;
+  background: #0b0f19;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.cart-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0 80px 0;
+}
+
+.cart-container h1 {
+  font-size: 38px;
+  font-weight: 800;
+  margin-bottom: 35px;
+  letter-spacing: -0.5px;
+}
+
+/* ================= BANNER DE AVISO AUTH (Nuevo Estilo Melo) ================= */
+.auth-notice-banner {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-left: 4px solid #2196f3; /* Línea de acento con tu azul principal */
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 25px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.auth-notice-banner:hover {
+  border-color: #2196f3;
+  background: #161f30;
+  box-shadow: 0 4px 20px rgba(33, 150, 243, 0.05);
+}
+
+.auth-notice-banner p {
+  margin: 0;
+  font-size: 14px;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+.auth-notice-banner strong {
+  color: #2196f3; /* Match perfecto con tus botones */
+  font-weight: 700;
+}
+
+/* ================= CARRITO VACÍO ================= */
+.cart-empty {
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.cart-empty .empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 5px;
+}
+
+.cart-empty p {
+  font-size: 20px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.continue-btn {
+  border: none;
+  background: #2196f3;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.2);
+}
+
+.continue-btn:hover {
+  transform: translateY(-2px);
+  background: #42a5f5;
+  box-shadow: 0 12px 25px rgba(33, 150, 243, 0.35);
+}
+
+/* ================= LISTA DE PRODUCTOS ================= */
+.cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.cart-item img {
+  width: 130px;
+  height: 95px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: #1f2937;
+}
+
+.cart-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cart-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #f3f4f6;
+}
+
+/* Precios estilizados y modernos (Melo) */
+.price-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.item-price {
+  color: #3b82f6;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.unit-badge {
+  background: rgba(55, 65, 81, 0.5);
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+/* ================= SELECTOR DE CANTIDAD ================= */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  background: #1f2937;
+  width: fit-content;
+  padding: 4px;
+  border-radius: 8px;
+  margin-top: 4px;
+  border: 1px solid #374151;
+}
+
+.qty-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.qty-btn:hover {
+  background: #374151;
+}
+
+.qty-number {
+  padding: 0 12px;
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 25px;
+  text-align: center;
+}
+
+/* ================= ACCIONES POR FILA ================= */
+.cart-item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.item-subtotal {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.remove-btn {
+  border: none;
+  background: rgba(220, 38, 38, 0.1);
+  color: #f87171;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.remove-btn:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* ================= FOOTER DEL CARRITO ================= */
+.cart-footer {
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 1px solid #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.cart-footer h2 {
+  font-size: 34px;
+  font-weight: 800;
+  color: #3b82f6;
+  margin: 0;
+}
+
+.cart-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.clear-btn,
+.checkout-btn {
+  border: none;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-btn {
+  background: #1f2937;
+  color: #d1d5db;
+  border: 1px solid #374151;
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: #374151;
+  color: white;
+}
+
+.checkout-btn {
+  background: #2196f3;
+  color: white;
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.15);
+}
+
+.checkout-btn:hover:not(:disabled) {
+  background: #42a5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(33, 150, 243, 0.3);
+}
+
+.clear-btn:disabled,
+.checkout-btn:disabled {
+  background: #4b5563;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.6;
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+@media (max-width: 768px) {
+  .cart-container h1 {
+    font-size: 30px;
+  }
+
+  .cart-item {
+    position: relative;
+    padding-bottom: 70px;
+  }
+
+  .cart-item-actions {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    flex-direction: row;
+    align-items: center;
+    width: calc(100% - 40px);
+    justify-content: space-between;
+  }
+
+  .cart-footer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .cart-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .clear-btn,
+  .checkout-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 85px;
+  }
+
+  .cart-item img {
+    width: 100%;
+    height: 160px;
+  }
+
+  .quantity-selector {
+    margin: 8px auto 0 auto;
+  }
+
+  .cart-item-actions {
+    width: calc(100% - 40px);
+  }
+}

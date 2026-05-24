@@ -5,7 +5,7 @@ export interface Product {
 
   title: string;
 
-  price: string;
+  price: number;
 
   images: string[];
 
@@ -33,7 +33,7 @@ export const storeProducts: Product[] = [
 
     title: "God of War",
 
-    price: "$39.99",
+    price: 39.99,
 
     images: [
       "https://images3.alphacoders.com/843/thumb-1920-843016.jpg",
@@ -73,7 +73,7 @@ export const storeProducts: Product[] = [
 
     title: "Elden Ring",
 
-    price: "$49.99",
+    price: 49.99,
 
     images: [
       "https://images.steamusercontent.com/ugc/2058741034012526512/379E6434B473E7BE31C50525EB946D4212A8C8B3/",
@@ -111,7 +111,7 @@ export const storeProducts: Product[] = [
 
     title: "Forza Horizon 6",
 
-    price: "$59.99",
+    price: 59.99,
 
     images: [
       "https://images5.alphacoders.com/140/thumb-1920-1401537.jpg",
@@ -147,7 +147,7 @@ export const storeProducts: Product[] = [
 
     title: "Cyberpunk 2077",
 
-    price: "$29.99",
+    price: 29.99,
 
     images: [
       "https://press.cdprojektred.com/_next/image?url=https%3A%2F%2Fpress.cdn.cdpr.app%2Fnews%2F6fdf182c4be4a018da07e1703f3a21aefb6d5833525d8ec1.png&w=1920&q=75",
@@ -186,7 +186,7 @@ export const storeProducts: Product[] = [
 
     title: "EA Sports FC 26",
 
-    price: "$59.99",
+    price: 59.99,
 
     images: [
       "https://media.es.wired.com/photos/6880fadda69582ec829f6bca/master/w_2560%2Cc_limit/ea-sports-fc-26-Cover.jpg",
@@ -225,7 +225,7 @@ export const storeProducts: Product[] = [
 
     title: "Windows 11 Pro",
 
-    price: "$19.99",
+    price: 19.99,
 
     images: [
       "https://www.muycomputer.com/wp-content/uploads/2021/11/Windows_11_Home.jpg",
@@ -258,7 +258,7 @@ export const storeProducts: Product[] = [
 
     title: "Office 365",
 
-    price: "$24.99",
+    price: 24.99,
 
     images: [
       "https://www.euskomilenio.com/wp-content/uploads/2022/08/OFFICE-365.png",
@@ -290,7 +290,7 @@ export const storeProducts: Product[] = [
 
     title: "Kaspersky Premium",
 
-    price: "$14.99",
+    price: 14.99,
 
     images: [
       "https://computadorasylaptopsmonterrey.com/wp-content/uploads/2025/04/Ventajas-de-Kaspersky-Antivirus-01.png",
@@ -324,7 +324,7 @@ export const storeProducts: Product[] = [
 
     title: "Netflix Premium",
 
-    price: "$9.99",
+    price: 9.99,
 
     images: [
       "https://images.ctfassets.net/y2ske730sjqp/1aONibCke6niZhgPxuiilC/2c401b05a07288746ddf3bd3943fbc76/BrandAssets_Logos_01-Wordmark.jpg?w=940",
@@ -355,7 +355,7 @@ export const storeProducts: Product[] = [
 
     title: "Spotify Premium",
 
-    price: "$5.99",
+    price: 5.99,
 
     images: [
       "https://planetafacil.plenainclusion.org/wp-content/uploads/2022/02/Spotify_logo_with_color_system-820x547.gif",
@@ -388,7 +388,7 @@ export const storeProducts: Product[] = [
 
     title: "Crunchyroll Mega Fan",
 
-    price: "$7.99",
+    price: 7.99,
 
     images: [
       "https://sm.ign.com/t/ign_in/news/c/crunchyrol/crunchyroll-is-increasing-prices-right-after-removing-its-fr_xwjx.1200.jpg",

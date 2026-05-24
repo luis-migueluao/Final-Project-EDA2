@@ -58,8 +58,8 @@ const ProductCard = ({
         </p>
 
         <div className="product-price">
-          {product.price}
-        </div>
+  ${product.price.toFixed(2)}
+</div>
 
       </div>
 

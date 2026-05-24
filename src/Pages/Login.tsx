@@ -25,8 +25,14 @@ const Login = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       navigate("/");
+
     } catch (error: any) {
       console.error("Error de login:", error);
 
@@ -34,6 +40,8 @@ const Login = () => {
         alert("Usuario no encontrado");
       } else if (error.code === "auth/wrong-password") {
         alert("Contraseña incorrecta");
+      } else if (error.code === "auth/invalid-credential") {
+        alert("Correo o contraseña incorrectos");
       } else {
         alert(error.message);
       }
