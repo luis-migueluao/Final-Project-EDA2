@@ -50,3 +50,45 @@ body,
   color: white;
   padding-bottom: 80px;
 }
+
+/* ================= SORT CONTROLS (HEAP) ================= */
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 40px 0 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sort-controls label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.sort-controls select {
+  padding: 8px 14px;
+  background: #111827;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border 0.2s;
+  min-width: 200px;
+}
+
+.sort-controls select:focus {
+  border-color: #2196f3;
+}
+
+.sort-controls select option {
+  background: #111827;
+  color: #e5e7eb;
+}

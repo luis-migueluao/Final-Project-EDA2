@@ -32,7 +32,6 @@ export const storeProducts: Product[] = [
     id: 1,
 
     title: "God of War",
-
     price: 39.99,
 
     images: [
@@ -65,7 +64,7 @@ export const storeProducts: Product[] = [
     ],
 
     featured: true,
-    bestSeller: true,
+    bestSeller: false,
   },
 
   {
@@ -103,7 +102,7 @@ export const storeProducts: Product[] = [
     ],
 
     featured: true,
-    bestSeller: true,
+    bestSeller: false,
   },
 
   {
@@ -345,7 +344,6 @@ export const storeProducts: Product[] = [
     subCategory: [
       "netflix",
     ],
-
     featured: true,
     bestSeller: true,
   },

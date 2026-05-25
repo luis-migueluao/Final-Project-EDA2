@@ -1,4 +1,5 @@
 import {
+  useMemo,
   useState,
 } from "react";
 
@@ -17,6 +18,10 @@ import {
   storeProducts,
 } from "../data/storeData";
 
+import {
+  Heap,
+} from "../Helpers/Heap";
+
 const Home = () => {
 
   const [hoverMenu, setHoverMenu] =
@@ -27,6 +32,19 @@ const Home = () => {
 
   const [activeSub, setActiveSub] =
     useState<string | null>(null);
+
+  // ================= HEAP SORT =================
+
+  type SortOption =
+    | "default"
+    | "price-asc"
+    | "price-desc"
+    | "name-asc"
+    | "name-desc";
+
+  const [sortOption,
+    setSortOption] =
+      useState<SortOption>("default");
 
   // ================= MENU =================
 
@@ -107,6 +125,85 @@ const Home = () => {
       }
     );
 
+  // ================= HEAP SORT (ALGORITMO) =================
+
+  const sortedProducts =
+    useMemo(() => {
+      if (
+        sortOption === "default"
+      ) {
+        return filteredProducts;
+      }
+
+      // Usamos el Heap para ordenar eficientemente
+      const heap =
+        new Heap<
+          (typeof storeProducts)[0]
+        >(
+          sortOption ===
+            "price-asc" ||
+            sortOption ===
+              "name-asc"
+            ? "min"
+            : "max"
+        );
+
+      // Insertar productos en el Heap con prioridad según la opción
+      filteredProducts.forEach(
+        (product) => {
+          let priority = 0;
+
+          switch (
+            sortOption
+          ) {
+            case "price-asc":
+            case "price-desc":
+              priority =
+                product.price;
+              break;
+            case "name-asc":
+            case "name-desc":
+              // Usar código char para orden alfabético
+              priority =
+                product.title
+                  .toLowerCase()
+                  .charCodeAt(0) *
+                  1000 +
+                product.title
+                  .length;
+              break;
+          }
+
+          heap.insert(
+            product,
+            priority
+          );
+        }
+      );
+
+      // Extraer todos ordenados
+      const sorted =
+        heap.extractAll();
+
+      return sorted;
+    }, [
+      filteredProducts,
+      sortOption,
+    ]);
+
+  // ================= HANDLE SORT =================
+
+  const handleSortChange = (
+    e: React.ChangeEvent<
+      HTMLSelectElement
+    >
+  ) => {
+    setSortOption(
+      e.target
+        .value as SortOption
+    );
+  };
+
   return (
 
     <Container
@@ -140,10 +237,42 @@ const Home = () => {
 
       )}
 
+      {/* SORT CONTROLS */}
+      {(activeCategory ||
+        activeSub) && (
+        <div className="sort-controls">
+          <label>
+            Ordenar por:
+          </label>
+          <select
+            value={sortOption}
+            onChange={
+              handleSortChange
+            }
+          >
+            <option value="default">
+              Predeterminado
+            </option>
+            <option value="price-asc">
+              Precio: Menor a Mayor
+            </option>
+            <option value="price-desc">
+              Precio: Mayor a Menor
+            </option>
+            <option value="name-asc">
+              Nombre: A - Z
+            </option>
+            <option value="name-desc">
+              Nombre: Z - A
+            </option>
+          </select>
+        </div>
+      )}
+
       {/* PRODUCTS */}
       <ProductsSection
         products={
-          filteredProducts
+          sortedProducts
         }
         activeCategory={
           activeCategory

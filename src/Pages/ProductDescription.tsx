@@ -16,6 +16,14 @@ import Header from "../Components/Header";
 import Menu from "../Components/Menu";
 
 import {
+  buildProductGraph,
+} from "../data/graphData";
+
+import {
+  getRelatedProducts,
+} from "../Helpers/graphAlgorithms";
+
+import {
   useCart,
 } from "../Context/CartContext";
 
@@ -119,23 +127,42 @@ const ProductDescription = () => {
   // ================= BUY NOW FLOW =================
 
   const handleBuyNow = () => {
-    // 1. Encola el producto usando tu estructura de datos del Context
+
     addToCart(product);
-    
-    // 2. Redirecciona inmediatamente a la página del carrito
+
     navigate("/cart");
   };
 
-  // ================= RELATED =================
+  // ================= GRAPH NODES =================
+
+  const productsAsNodes =
+    storeProducts.map(
+      (p) => ({
+
+        id: p.id,
+
+        title: p.title,
+
+        category: p.category,
+
+        subCategory: p.subCategory,
+
+      })
+    );
+
+  // ================= BUILD GRAPH =================
+
+  const productGraph =
+    buildProductGraph(
+      productsAsNodes
+    );
+
+  // ================= RELATED PRODUCTS =================
 
   const relatedProducts =
-    storeProducts.filter(
-      (p) =>
-
-        p.category ===
-          product.category &&
-
-        p.id !== product.id
+    getRelatedProducts(
+      productGraph,
+      product.id
     );
 
   return (
@@ -191,11 +218,8 @@ const ProductDescription = () => {
                   src={img}
                   alt={product.title}
                   className={`gallery-image ${
-                    selectedImage ===
-                    img
-
+                    selectedImage === img
                       ? "active-gallery-image"
-
                       : ""
                   }`}
                   onClick={() =>
@@ -250,10 +274,17 @@ const ProductDescription = () => {
 
           </div>
 
-          {/* ACTIONS BUTTONS */}
-          <div className="product-actions-group" style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
-            
-            {/* AGREGAR AL CARRITO */}
+          {/* BUTTONS */}
+          <div
+            className="product-actions-group"
+            style={{
+              display: "flex",
+              gap: "12px",
+              marginTop: "20px"
+            }}
+          >
+
+            {/* ADD CART */}
             <button
               className="buy-button"
               onClick={() =>
@@ -265,7 +296,7 @@ const ProductDescription = () => {
               Agregar al carrito
             </button>
 
-            {/* COMPRAR AHORA */}
+            {/* BUY NOW */}
             <button
               className="buy-now-button"
               onClick={handleBuyNow}
@@ -279,7 +310,7 @@ const ProductDescription = () => {
 
       </div>
 
-      {/* RELATED */}
+      {/* RELATED PRODUCTS */}
       <div className="related-section">
 
         <h2>
@@ -289,44 +320,56 @@ const ProductDescription = () => {
         <div className="related-grid">
 
           {relatedProducts.map(
-            (item) => (
+            (item) => {
 
-              <div
-                key={item.id}
-                className="related-card"
-                onClick={() =>
-                  navigate(
-                    `/product/${item.id}`
-                  )
-                }
-              >
+              const fullProduct =
+                storeProducts.find(
+                  p => p.id === item.id
+                );
 
-                <img
-                  src={
-                    item.images[0]
+              if (!fullProduct)
+                return null;
+
+              return (
+
+                <div
+                  key={item.id}
+                  className="related-card"
+                  onClick={() =>
+                    navigate(
+                      `/product/${item.id}`
+                    )
                   }
-                  alt={item.title}
-                />
+                >
 
-                <div className="related-info">
+                  <img
+                    src={
+                      fullProduct.images[0]
+                    }
+                    alt={item.title}
+                  />
 
-                  <h3>
-                    {item.title}
-                  </h3>
+                  <div className="related-info">
 
-                  <span>
+                    <h3>
+                      {item.title}
+                    </h3>
 
-                    {formatPrice(
-                      item.price
-                    )}
+                    <span>
 
-                  </span>
+                      {formatPrice(
+                        fullProduct.price
+                      )}
+
+                    </span>
+
+                  </div>
 
                 </div>
 
-              </div>
+              );
 
-            )
+            }
           )}
 
         </div>

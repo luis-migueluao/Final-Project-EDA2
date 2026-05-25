@@ -1,18 +1,13 @@
-export interface TreeNode {
-  id: number;
-  label: string;
-  children?: TreeNode[];
-}
+// src/data/menuTree.ts
+import type { TreeNode } from '../Helpers/GeneralTree';
 
 export const gamingTree: TreeNode = {
   id: 1,
   label: "Gaming",
-
   children: [
     {
       id: 2,
       label: "Por plataforma",
-
       children: [
         { id: 3, label: "Steam" },
         { id: 4, label: "Xbox Live" },
@@ -21,11 +16,9 @@ export const gamingTree: TreeNode = {
         { id: 7, label: "Epic Games" },
       ],
     },
-
     {
       id: 8,
       label: "Por género",
-
       children: [
         { id: 9, label: "RPG" },
         { id: 10, label: "Shooter" },
@@ -33,11 +26,9 @@ export const gamingTree: TreeNode = {
         { id: 12, label: "Deportes" },
       ],
     },
-
     {
       id: 13,
       label: "Por dispositivo",
-
       children: [
         { id: 14, label: "PC" },
         { id: 15, label: "PlayStation" },
@@ -51,12 +42,10 @@ export const gamingTree: TreeNode = {
 export const softwareTree: TreeNode = {
   id: 20,
   label: "Software",
-
   children: [
     {
       id: 21,
       label: "Categorías",
-
       children: [
         { id: 22, label: "Antivirus" },
         { id: 23, label: "Office" },
@@ -69,12 +58,10 @@ export const softwareTree: TreeNode = {
 export const subscriptionsTree: TreeNode = {
   id: 30,
   label: "Suscriptions",
-
   children: [
     {
       id: 31,
       label: "Streaming",
-
       children: [
         { id: 32, label: "Netflix" },
         { id: 33, label: "Spotify" },
