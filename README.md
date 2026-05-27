@@ -6,13 +6,16 @@ Plataforma web de venta de videojuegos, software y suscripciones digitales.
 
 | **Repositorio GitHub** | [https://github.com/luis-migueluao/Final-Project-EDA2]|
 
+| **Propuesta gráfica (Figma)** | *[https://www.figma.com/proto/uGIaKer49Bhrw9hKAiTabS/Estructura-de-Datos-2-Final-Project?node-id=6-5&p=f&t=yomllUI4cBplACRL-1&scaling=contain&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=6%3A5]* |
 
-| **Despliegue (Netlify)** | *[Pendiente - agregar URL aquí]* |
-| **Propuesta gráfica (Figma)** | *[Pendiente - agregar enlace Figma aquí]* |
+| **Despliegue (Netlify)** | *[https://exquisite-cupcake-a9a7ec.netlify.app]* |
+
+| **Documento Final** | *[https://docs.google.com/document/d/1DlPrjDAbV-2eI--Xjuem8TS6ES1C_3xHeres4w6e9Js/edit?usp=sharing]* |
+
 
 ## 👥 Integrantes
 
-| *[LUIS MIGUEL CRUZ MALDONADO 2235482]* |
+| *[LUIS MIGUEL CRUZ MALDONADO ](2235482)* |
 
 
 ## 📁 Estructura del proyecto
