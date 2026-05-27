@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
-import { useCart } from "../Context/CartContext";
+import { useCart, type CartItem } from "../Context/CartContext";
 import { useAuthContext } from "../Context/AuthContext"; 
+import CheckoutModal from "../Components/CheckoutModal";
 import "../styles/Cart.css";
 
 const Cart = () => {
@@ -9,6 +11,9 @@ const Cart = () => {
   const { user } = useAuthContext(); 
   
   const { items, addToCart, removeFromCart, clearCart, checkout, isCheckingOut } = useCart();
+
+  const [showModal, setShowModal] = useState(false);
+  const [orderResult, setOrderResult] = useState<{ id: string; total: number } | null>(null);
 
   const resetAll = () => {
     navigate("/");
@@ -23,18 +28,16 @@ const Cart = () => {
     try {
       const orderId = await checkout();
       if (orderId) {
-        alert(`¡Pedido confirmado con éxito! ID de orden: ${orderId}`);
-        navigate("/"); 
+        const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        setOrderResult({ id: orderId, total });
+        setShowModal(true);
       }
     } catch (error) {
       alert("Ocurrió un error al procesar tu compra. Por favor, intenta de nuevo.");
     }
   };
 
-  /**
-   * Control de cantidades seguro pasando el objeto completo en tiempo real
-   */
-  const handleQuantityChange = (e: React.MouseEvent, item: any, action: "increment" | "decrement") => {
+  const handleQuantityChange = (e: React.MouseEvent, item: CartItem, action: "increment" | "decrement") => {
     e.preventDefault(); 
     
     const fullProduct = { ...item };
@@ -50,7 +53,19 @@ const Cart = () => {
     }
   };
 
-  // ================= CÁLCULO DEL TOTAL =================
+  const closeModal = () => {
+    setShowModal(false);
+    setOrderResult(null);
+    navigate("/");
+  };
+
+  const goToOrders = () => {
+    setShowModal(false);
+    setOrderResult(null);
+    navigate("/profile");
+  };
+
+  // ================= TOTAL =================
   const total = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
@@ -63,16 +78,15 @@ const Cart = () => {
       <div className="cart-container">
         <h1>Carrito de compras</h1>
 
-        {/* BANNER SIN EMOJI */}
+        {/* BANNER */}
         {!user && (
-          <div className="auth-notice-banner" onClick={() => navigate("/login")} style={{ cursor: 'pointer' }}>
+          <div className="auth-notice-banner" onClick={() => navigate("/login")}>
             <p>
               <strong>Inicia sesión</strong> para guardar tu compra en tu cuenta y sincronizarla en cualquier dispositivo.
             </p>
           </div>
         )}
 
-        {/* VISTA DEL CARRITO VACÍO */}
         {items.length === 0 ? (
           <div className="cart-empty">
             <div className="empty-icon">🛒</div>
@@ -83,7 +97,6 @@ const Cart = () => {
           </div>
         ) : (
           <>
-            {/* LISTADO DE PRODUCTOS */}
             <div className="cart-list">
               {items.map((item) => (
                 <div key={item.id} className="cart-item">
@@ -136,7 +149,7 @@ const Cart = () => {
               ))}
             </div>
 
-            {/* SECCIÓN DE RESUMEN Y ACCIONES GENERALES */}
+            {/* FOOTER */}
             <div className="cart-footer">
               <h2>Total: ${total.toFixed(2)}</h2>
 
@@ -166,6 +179,15 @@ const Cart = () => {
           </>
         )}
       </div>
+
+      {showModal && orderResult && (
+        <CheckoutModal
+          orderId={orderResult.id}
+          total={orderResult.total}
+          onClose={closeModal}
+          onViewOrders={goToOrders}
+        />
+      )}
     </div>
   );
 };

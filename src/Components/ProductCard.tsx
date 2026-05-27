@@ -1,8 +1,8 @@
-// src/Components/ProductCard.tsx
-
 import { useNavigate } from "react-router-dom";
 
-import type { Product } from "../data/storeData";
+import type {
+  Product,
+} from "../Context/ProductsContext";
 
 import "../styles/ProductCard.css";
 
@@ -14,29 +14,31 @@ const ProductCard = ({
   product,
 }: ProductCardProps) => {
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   return (
 
     <div
       className="product-card"
       onClick={() =>
-        navigate(`/product/${product.id}`)
+        navigate(
+          `/product/${product.id}`
+        )
       }
     >
 
-      {/* IMAGE */}
       <div className="product-image-container">
 
         <img
           src={product.images[0]}
           className="product-image"
           alt={product.title}
+          loading="lazy"
         />
 
       </div>
 
-      {/* INFO */}
       <div className="product-info">
 
         <h3>
@@ -48,9 +50,7 @@ const ProductCard = ({
         </div>
 
         <div className="product-subcategories">
-
           {product.subCategory.join(", ")}
-
         </div>
 
         <p className="product-description">
@@ -58,8 +58,11 @@ const ProductCard = ({
         </p>
 
         <div className="product-price">
-  ${product.price.toFixed(2)}
-</div>
+          $
+          {product.price.toFixed(
+            2
+          )}
+        </div>
 
       </div>
 

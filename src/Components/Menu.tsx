@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { GeneralTree, type  TreeNode } from "../Helpers/GeneralTree";
 import {
   gamingTree,
@@ -23,10 +24,9 @@ const Menu = ({
   handleSubClick,
 }: MenuProps) => {
 
-  // 1. Instanciamos las estructuras de datos usando la clase de Helpers
-  const gamingTreeInstance = new GeneralTree(gamingTree);
-  const softwareTreeInstance = new GeneralTree(softwareTree);
-  const subscriptionsTreeInstance = new GeneralTree(subscriptionsTree);
+  const gamingTreeInstance = useMemo(() => new GeneralTree(gamingTree), []);
+  const softwareTreeInstance = useMemo(() => new GeneralTree(softwareTree), []);
+  const subscriptionsTreeInstance = useMemo(() => new GeneralTree(subscriptionsTree), []);
 
   const isOpen = (menu: string) => hoverMenu === menu;
 
@@ -45,8 +45,7 @@ const Menu = ({
           <p
             key={item.id}
             onClick={() => {
-              // Aquí demostramos el uso de la estructura: buscamos el nodo al hacer clic 
-              // antes de disparar la acción (puedes usarlo para validar o registrar analíticas)
+              
               const clickedNode = treeInstance.findNodeById(item.id);
               if (clickedNode) {
                 handleSubClick(clickedNode.label);
@@ -84,25 +83,22 @@ const Menu = ({
           onMouseEnter={() => setHoverMenu("subscriptions")}
           onClick={() => handleCategoryClick("subscriptions")}
         >
-          Suscripciones
+          Subscriptions
         </span>
       </div>
 
-      {/* GAMING - Renderizado dinámico usando la clase de la estructura */}
       {isOpen("gaming") && (
         <div className="dropdown-menu-custom">
           {renderDropdownColumns(gamingTreeInstance)}
         </div>
       )}
 
-      {/* SOFTWARE - Renderizado dinámico usando la clase de la estructura */}
       {isOpen("software") && (
         <div className="dropdown-menu-custom">
           {renderDropdownColumns(softwareTreeInstance)}
         </div>
       )}
 
-      {/* SUBSCRIPTIONS - Renderizado dinámico usando la clase de la estructura */}
       {isOpen("subscriptions") && (
         <div className="dropdown-menu-custom">
           {renderDropdownColumns(subscriptionsTreeInstance)}

@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../Context/AuthContext";
+import type { ReactNode } from "react";
 
-const PrivateRoute = ({ children }: { children: any}) => {
+const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const { user, loading } = useAuthContext();
 
   // Mientras está cargando, muestra la página actual

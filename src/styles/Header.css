@@ -21,7 +21,6 @@
 .logo-section {
   display: flex;
   align-items: center;
-
   min-width: fit-content;
 }
 
@@ -30,9 +29,7 @@
   font-weight: 900;
 
   color: #2196f3;
-
   margin: 0;
-
   letter-spacing: 1px;
 
   cursor: pointer;
@@ -40,15 +37,12 @@
   transition: 0.25s;
 
   padding: 8px 14px;
-
   border-radius: 10px;
-
   user-select: none;
 }
 
 .logo:hover {
   color: #65baff;
-
   transform: scale(1.03);
 }
 
@@ -99,14 +93,11 @@
 
 .search-input:focus {
   border-color: #2196f3;
-
-  box-shadow:
-    0 0 10px rgba(33, 150, 243, 0.35);
-
+  box-shadow: 0 0 10px rgba(33, 150, 243, 0.35);
   transform: translateY(-1px);
 }
 
-/* ================= SEARCH SUGGESTIONS (TRIE) ================= */
+/* ================= SEARCH SUGGESTIONS ================= */
 
 .search-suggestions {
   position: absolute;
@@ -114,14 +105,18 @@
   left: 50px;
   right: 50px;
   max-width: 760px;
+
   margin: 0 auto;
 
   background: rgba(17, 29, 66, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+
   border: 1px solid rgba(33, 150, 243, 0.2);
   border-radius: 12px;
+
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6);
+
   z-index: 1000;
   overflow: hidden;
 }
@@ -130,9 +125,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
   padding: 10px 16px;
+
   cursor: pointer;
-  transition: background 0.15s;
+
+  transition: all 0.2s ease;
+
   border-bottom: 1px solid #1e293b;
 }
 
@@ -142,13 +141,16 @@
 
 .search-suggestion-item:hover {
   background: #1e3a5f;
+  transform: scale(1.01);
 }
 
 .suggestion-image {
   width: 40px;
   height: 40px;
+
   object-fit: cover;
   border-radius: 8px;
+
   flex-shrink: 0;
 }
 
@@ -156,18 +158,22 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+
   min-width: 0;
 }
 
 .suggestion-title {
   font-size: 14px;
   font-weight: 600;
+
   color: #e5e7eb;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* 🔥 NUEVO: animación meta */
 .suggestion-meta {
   display: flex;
   align-items: center;
@@ -178,19 +184,29 @@
 .suggestion-category {
   font-size: 11px;
   font-weight: 700;
+
   color: #c084fc;
+
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.15),
+    rgba(99, 102, 241, 0.15)
+  );
+
   padding: 2px 10px;
+
   border-radius: 4px;
-  white-space: nowrap;
+
   border: 1px solid rgba(168, 85, 247, 0.3);
 }
 
 .suggestion-subcategories {
   font-size: 11px;
   color: #60a5fa;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -199,6 +215,7 @@
 .suggestion-price {
   font-size: 13px;
   font-weight: 700;
+
   color: #2196f3;
 }
 
@@ -240,17 +257,17 @@
 
 .cart-icon-container:hover {
   border-color: #2196f3;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.25);
 
-  box-shadow:
-    0 0 12px rgba(33, 150, 243, 0.25);
+  transform: translateY(-3px) scale(1.02);
+}
 
-  transform: translateY(-2px);
+.cart-icon-container:active {
+  transform: translateY(0px) scale(0.97);
 }
 
 .cart-icon {
   font-size: 22px;
-
-  line-height: 1;
 }
 
 .cart-badge {
@@ -293,6 +310,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* 🔥 NUEVO: efecto hover perfil */
+.user-email:hover {
+  transform: scale(1.08);
+  color: #2196f3;
+  text-shadow: 0 0 10px rgba(33, 150, 243, 0.4);
 }
 
 /* ================= BUTTONS ================= */
@@ -309,58 +337,54 @@
   transition: 0.25s;
 
   white-space: nowrap;
+
+  cursor: pointer;
 }
 
-/* MÁS separación entre acceder y registro */
+/* efecto click */
+.header-info .btn:active {
+  transform: scale(0.95);
+}
+
+/* separación entre botones */
 .header-info .btn-primary + .btn-primary {
   margin-left: 10px;
 }
 
 .header-info .btn-primary {
   background: #1976d2;
-
   border: none;
 }
 
 .header-info .btn-primary:hover {
   background: #2196f3;
-
   transform: translateY(-2px);
 }
 
 .header-info .btn-outline-danger {
   border: 1px solid #2196f3;
-
   color: #2196f3;
-
   background: transparent;
 }
 
 .header-info .btn-outline-danger:hover {
   background: #2196f3;
-
   color: white;
-
   transform: translateY(-2px);
 }
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 1100px) {
-
   .home-header {
     flex-wrap: wrap;
-
     height: auto;
-
     padding: 18px 24px;
   }
 
   .search-container {
     width: 100%;
-
     order: 3;
-
     padding: 18px 0 0 0;
   }
 
@@ -370,7 +394,6 @@
 }
 
 @media (max-width: 700px) {
-
   .home-header {
     padding: 14px;
   }
@@ -406,14 +429,10 @@
 }
 
 @media (max-width: 520px) {
-
   .header-info {
     width: 100%;
-
     justify-content: flex-end;
-
     flex-wrap: wrap;
-
     margin-top: 12px;
   }
 

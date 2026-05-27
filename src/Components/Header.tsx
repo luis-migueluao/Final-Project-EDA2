@@ -1,31 +1,12 @@
 import { Button } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useAuthContext } from "../Context/AuthContext";
+import { useCart } from "../Context/CartContext";
+import { useProducts } from "../Context/ProductsContext";
 
-import {
-  useNavigate,
-} from "react-router-dom";
-
-import {
-  useAuthContext,
-} from "../Context/AuthContext";
-
-import {
-  useCart,
-} from "../Context/CartContext";
-
-import {
-  storeProducts,
-} from "../data/storeData";
-
-import {
-  searchProducts,
-  type SearchResult,
-} from "../data/searchData";
+import { searchProducts, type SearchResult } from "../data/searchData";
 
 import "../styles/Header.css";
 
@@ -33,68 +14,41 @@ interface HeaderProps {
   resetAll: () => void;
 }
 
-const Header = ({
-  resetAll,
-}: HeaderProps) => {
+const Header = ({ resetAll }: HeaderProps) => {
+  const { user, logout } = useAuthContext();
+  const { items } = useCart();
+  const { products } = useProducts();
 
-  const { user, logout } =
-    useAuthContext();
+  const navigate = useNavigate();
 
-  const { items } =
-    useCart();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const navigate =
-    useNavigate();
+  const searchRef = useRef<HTMLDivElement>(null);
 
-  // ================= SEARCH =================
-
-  const [searchQuery,
-    setSearchQuery] =
-      useState("");
-
-  const [suggestions,
-    setSuggestions] =
-      useState<SearchResult[]>([]);
-
-  const [showSuggestions,
-    setShowSuggestions] =
-      useState(false);
-
-  const searchRef =
-    useRef<HTMLDivElement>(null);
-
-  // ================= BESTSELLER (al enfocar el search vacío) =================
+  // ================= BEST SELLERS =================
 
   const showBestSellers = () => {
-    const bestSellers =
-      storeProducts
-        .filter(
-          (p) =>
-            p.bestSeller
-        )
-        .slice(0, 5)
-        .map((p) => ({
-          id: p.id,
-          title: p.title,
-          price: p.price,
-          image:
-            p.images[0] || "",
-          category:
-            p.category,
-          subCategory:
-            p.subCategory,
-        }));
+    const best = products
+      .filter((p) => p.bestSeller)
+      .slice(0, 5)
+      .map((p) => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        image: p.images?.[0] || "",
+        category: p.category,
+        subCategory: p.subCategory,
+      }));
 
-    setSuggestions(
-      bestSellers
-    );
+    setSuggestions(best);
     setShowSuggestions(true);
   };
 
-  // Manejar cambios en la búsqueda (usa el Trie)
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  // ================= SEARCH =================
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
 
@@ -108,195 +62,128 @@ const Header = ({
     }
   };
 
-  // Navegar al producto al hacer clic en sugerencia
-  const handleSuggestionClick = (
-    productId: number
-  ) => {
+  // ================= CLICK PRODUCT =================
+
+  const handleSuggestionClick = (productId: number) => {
     setSearchQuery("");
     setSuggestions([]);
     setShowSuggestions(false);
+
     navigate(`/product/${productId}`);
   };
 
-  // Cerrar sugerencias al hacer clic fuera
+  // ================= CLOSE OUTSIDE =================
+
   useEffect(() => {
-    const handleClickOutside = (
-      e: MouseEvent
-    ) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (
         searchRef.current &&
-        !searchRef.current.contains(
-          e.target as Node
-        )
+        !searchRef.current.contains(e.target as Node)
       ) {
         setShowSuggestions(false);
       }
     };
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
+    document.addEventListener("mousedown", handleClickOutside);
     return () =>
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Manejar tecla Enter
-  const handleSearchKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (
-      e.key === "Enter" &&
-      suggestions.length > 0
-    ) {
-      handleSuggestionClick(
-        suggestions[0].id
-      );
-    }
+  // ================= CART COUNT =================
+
+  const totalItems = items.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
+
+  const handleLogout = async () => {
+    await logout();
   };
 
-  // ================= TOTAL ITEMS =================
-
-  const totalItems =
-    items.reduce(
-      (acc, item) =>
-        acc + item.quantity,
-      0
-    );
-
-  // ================= LOGOUT =================
-
-  const handleLogout =
-    async () => {
-
-      await logout();
-    };
-
   return (
-
     <header className="home-header">
 
-      {/* ================= LOGO ================= */}
-
-      <div
-        className="logo-section"
-        onClick={resetAll}
-      >
-
-        <h1 className="logo">
-          LOGO
-        </h1>
-
+      {/* LOGO */}
+      <div className="logo-section" onClick={resetAll}>
+        <h1 className="logo">GameStore</h1>
       </div>
 
-      {/* ================= SEARCH ================= */}
-
-      <div
-        className="search-container"
-        ref={searchRef}
-      >
-
+      {/* SEARCH */}
+      <div className="search-container" ref={searchRef}>
         <input
           type="text"
           placeholder="¿Qué estás buscando?"
           className="search-input"
           value={searchQuery}
           onChange={handleSearchChange}
-          onKeyDown={handleSearchKeyDown}
           onFocus={() => {
-            if (
-              searchQuery.trim()
-                .length > 0
-            ) {
-              if (
-                suggestions.length >
-                0
-              ) {
-                setShowSuggestions(
-                  true
-                );
-              }
-            } else {
-              // Mostrar bestsellers al hacer clic en el search vacío
+            if (searchQuery.trim().length === 0) {
               showBestSellers();
             }
           }}
         />
 
-        {/* SUGGESTIONS DROPDOWN (Trie) */}
-        {showSuggestions &&
-          suggestions.length > 0 && (
-            <div className="search-suggestions">
-              {suggestions.map((s) => (
-                <div
-                  key={s.id}
-                  className="search-suggestion-item"
-                  onClick={() =>
-                    handleSuggestionClick(
-                      s.id
-                    )
-                  }
-                >
-                  <img
-                    src={s.image}
-                    alt={s.title}
-                    className="suggestion-image"
-                  />
-                  <div className="suggestion-info">
-                    <span className="suggestion-title">
-                      {s.title}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="search-suggestions">
+            {suggestions.map((s) => (
+              <div
+                key={s.id}
+                className="search-suggestion-item"
+                onClick={() => handleSuggestionClick(s.id)}
+              >
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  className="suggestion-image"
+                />
+
+                <div className="suggestion-info">
+                  {/* TITLE */}
+                  <span className="suggestion-title">
+                    {s.title}
+                  </span>
+
+                  {/* CATEGORY + SUBCATEGORIES */}
+                  <div className="suggestion-meta">
+                    <span className="suggestion-category">
+                      {s.category}
                     </span>
-                    <div className="suggestion-meta">
-                      <span className="suggestion-category">
-                        {s.category}
-                      </span>
-                      <span className="suggestion-subcategories">
-                        {s.subCategory.join(", ")}
-                      </span>
-                    </div>
-                    <span className="suggestion-price">
-                      ${s.price.toFixed(2)}
+
+                    <span className="suggestion-subcategories">
+                      {s.subCategory?.join(", ")}
                     </span>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
 
+                  {/* PRICE */}
+                  <span className="suggestion-price">
+                    ${s.price.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* ================= RIGHT ================= */}
-
+      {/* RIGHT SIDE */}
       <div className="header-info">
 
         {/* CART */}
-        <div
-          className="cart-icon-container"
-          onClick={() =>
-            navigate("/cart")
-          }
-        >
-
-          <span className="cart-icon">
-            🛒
-          </span>
+        <div className="cart-icon-container" onClick={() => navigate("/cart")}>
+          <span className="cart-icon">🛒</span>
 
           {totalItems > 0 && (
-            <span className="cart-badge">
-              {totalItems}
-            </span>
+            <span className="cart-badge">{totalItems}</span>
           )}
-
         </div>
 
         {/* USER */}
         {user ? (
           <>
-
-            <span className="user-email">
+            <span
+              className="user-email"
+              onClick={() => navigate("/profile")}
+            >
               👤 {user.email}
             </span>
 
@@ -307,35 +194,14 @@ const Header = ({
             >
               Logout
             </Button>
-
           </>
-
         ) : (
-          <div className="auth-buttons">
-
-            <Button
-              className="header-btn"
-              onClick={() =>
-                navigate("/login")
-              }
-            >
-              Acceder
-            </Button>
-
-            <Button
-              className="header-btn register-btn"
-              onClick={() =>
-                navigate("/register")
-              }
-            >
-              Registro
-            </Button>
-
-          </div>
+          <Button onClick={() => navigate("/login")}>
+            Acceder
+          </Button>
         )}
 
       </div>
-
     </header>
   );
 };

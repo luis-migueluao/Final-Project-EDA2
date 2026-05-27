@@ -3,10 +3,57 @@
   margin: 40px auto 80px auto;
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .section-header h2 {
   font-size: 32px;
   font-weight: 800;
   color: white;
+  margin: 0;
+}
+
+/* ================= SORT CONTROLS INLINE (HEAP) ================= */
+
+.sort-controls-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-controls-inline label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.sort-controls-inline select {
+  padding: 7px 12px;
+  background: #111827;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  transition: border 0.2s;
+  min-width: 160px;
+}
+
+.sort-controls-inline select:focus {
+  border-color: #2196f3;
+}
+
+.sort-controls-inline select option {
+  background: #111827;
+  color: #e5e7eb;
 }
 
 .products-grid {

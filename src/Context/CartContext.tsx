@@ -4,6 +4,7 @@ import {
   useMemo,
   useState,
   useEffect,
+  useRef,
   type ReactNode,
 } from "react";
 
@@ -21,7 +22,7 @@ import { useAuthContext } from "./AuthContext";
 
 import type {
   Product,
-} from "../data/storeData";
+} from "./ProductsContext";
 
 import {
   Queue,
@@ -49,45 +50,92 @@ interface Props {
 
 export const CartProvider = ({ children }: Props) => {
   const { user } = useAuthContext(); 
-  const [cartQueue] = useState(new Queue<CartItem>());
+  
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
+  const [initialLoaded, setInitialLoaded] = useState(false);
 
-  // ================= EFECTO: SINCRO EN TIEMPO REAL CON EL NOMBRE EXACTO DEL PRODUCTO =================
+  const cartQueueRef = useRef(new Queue<CartItem>());
+
+  // Mantener queue sincronizada con items
   useEffect(() => {
-    if (!user) return;
+    cartQueueRef.current.load(items);
+  }, [items]);
+
+  // ================= CARGA INICIAL DESDE FIREBASE =================
+  // Al recargar la página, los items del carrito se recuperan desde Firebase
+  useEffect(() => {
+    if (!user) {
+      setItems([]);
+      setInitialLoaded(true);
+      return;
+    }
+
+    const loadCartFromFirebase = async () => {
+      try {
+        const itemsCollectionRef = collection(db, "users", user.uid, "ITEMS");
+        const snapshot = await getDocs(itemsCollectionRef);
+
+        if (snapshot.empty) {
+          setInitialLoaded(true);
+          return;
+        }
+
+        const loadedItems: CartItem[] = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: data.id,
+            title: data.title,
+            price: data.price,
+            quantity: data.quantity,
+            images: data.images || [],
+            description: data.description || "",
+            fullDescription: data.fullDescription || "",
+            category: data.category || "gaming",
+            subCategory: data.subCategory || [],
+          } as CartItem;
+        });
+
+        setItems(loadedItems);
+      } catch (error) {
+        console.error("Error cargando carrito:", error);
+      } finally {
+        setInitialLoaded(true);
+      }
+    };
+
+    loadCartFromFirebase();
+  }, [user]);
+
+  // ================= SINCRO HACIA FIREBASE =================
+  useEffect(() => {
+    // Solo sincronizar después de la carga inicial y si hay usuario
+    if (!initialLoaded || !user) return;
 
     const syncCartWithFirebase = async () => {
       try {
         const itemsCollectionRef = collection(db, "users", user.uid, "ITEMS");
         const snapshot = await getDocs(itemsCollectionRef);
 
-        // Si el carrito está vacío, borramos todo en Firebase
         if (items.length === 0) {
           const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
           await Promise.all(deletePromises);
           return;
         }
 
-        // Ahora los IDs en Firebase serán exactamente el TITLE del producto
         const localDocTitles = items.map(item => item.title.trim());
 
-        // 1. Borramos los documentos antiguos cuyo nombre/ID de documento ya no esté en el carrito
-        // Esto eliminará los documentos llamados "2", "9" o nombres viejos automáticamente
         const deletePromises = snapshot.docs
           .filter(doc => !localDocTitles.includes(doc.id))
           .map(doc => deleteDoc(doc.ref));
         await Promise.all(deletePromises);
 
-        // 2. Guardamos o actualizamos usando el string del TITLE como nombre/ID del documento
         const writePromises = items.map(item => {
           const cleanTitleId = item.title.trim();
-          
-          // Creamos la referencia usando el TITLE exacto como nombre del documento
           const itemDocRef = doc(db, "users", user.uid, "ITEMS", cleanTitleId);
           
           return setDoc(itemDocRef, {
-            id: item.id,       // El ID original (2 o 9) se queda bien guardado aquí adentro
+            id: item.id,
             title: item.title,
             price: item.price,
             quantity: item.quantity,
@@ -102,53 +150,46 @@ export const CartProvider = ({ children }: Props) => {
     };
 
     syncCartWithFirebase();
-  }, [items, user]);
-
+  }, [items, user, initialLoaded]);
 
   // ================= ADD / UPDATE QUANTITY =================
   const addToCart = (product: Product & { quantity?: number }) => {
-    const existing = items.find((item) => item.id === product.id);
-    let updatedItems: CartItem[] = [];
-
     const amountChange = product.quantity !== undefined ? product.quantity : 1;
 
-    if (existing) {
-      updatedItems = items.map((item) =>
-        item.id === product.id 
-          ? { 
-              ...item, 
-              title: product.title || item.title,
-              price: product.price || item.price,
-              images: product.images || item.images,
-              quantity: item.quantity + amountChange 
-            } 
-          : item
-      );
-      
-      updatedItems = updatedItems.filter(item => item.quantity > 0);
-      
-    } else {
-      const newItem: CartItem = { 
-        ...product, 
-        quantity: amountChange > 0 ? amountChange : 1 
-      };
-      cartQueue.enqueue(newItem);
-      updatedItems = [...items, newItem];
-    }
-    
-    setItems(updatedItems);
+    setItems(prev => {
+      const existing = prev.find((item) => item.id === product.id);
+
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id 
+            ? { 
+                ...item, 
+                title: product.title || item.title,
+                price: product.price || item.price,
+                images: product.images || item.images,
+                quantity: item.quantity + amountChange 
+              } 
+            : item
+        ).filter(item => item.quantity > 0);
+      } else {
+        const newItem: CartItem = { 
+          ...product, 
+          quantity: amountChange > 0 ? amountChange : 1 
+        };
+        cartQueueRef.current.enqueue(newItem);
+        return [...prev, newItem];
+      }
+    });
   };
 
   // ================= REMOVE =================
   const removeFromCart = (productId: number) => {
-    const filtered = items.filter((item) => item.id !== productId);
-    cartQueue.load(filtered);
-    setItems(filtered);
+    setItems(prev => prev.filter((item) => item.id !== productId));
   };
 
   // ================= CLEAR =================
   const clearCart = () => {
-    cartQueue.clear();
+    cartQueueRef.current.clear();
     setItems([]);
   };
 
@@ -159,22 +200,28 @@ export const CartProvider = ({ children }: Props) => {
     setIsCheckingOut(true);
 
     try {
+      const products = cartQueueRef.current.processAll((item) => ({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity,
+      }));
+
+      const total = products.reduce(
+        (acc, p) => acc + p.price * p.quantity, 0
+      );
+
       const orderData = {
         date: serverTimestamp(), 
-        total: items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+        total,
         status: "completed",
-        products: items.map((item) => ({
-          id: item.id,
-          title: item.title,
-          price: item.price,
-          quantity: item.quantity,
-        })),
+        products,
       };
 
       const ordersCollectionRef = collection(db, "users", user.uid, "ORDERS");
       const docRef = await addDoc(ordersCollectionRef, orderData);
       
-      clearCart();
+      setItems([]);
       return docRef.id;
     } catch (error) {
       console.error("Error al procesar la compra en ORDERS:", error);

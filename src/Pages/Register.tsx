@@ -15,14 +15,25 @@ import "../styles/Auth.css";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
   const handleRegister = async () => {
+    setError("");
+
     if (!email || !password) {
-      alert("Completa todos los campos");
+      setError("Completa todos los campos");
       return;
     }
+
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       await createUserWithEmailAndPassword(
@@ -33,15 +44,22 @@ const Register = () => {
 
       navigate("/login");
 
-    } catch (error: unknown) {
-      console.error(error);
+    } catch (err: unknown) {
+      console.error(err);
 
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Error en el registro";
+      const fireErr = err as { code?: string; message?: string };
 
-      alert(errorMessage);
+      if (fireErr.code === "auth/email-already-in-use") {
+        setError("Este correo ya está registrado");
+      } else if (fireErr.code === "auth/weak-password") {
+        setError("La contraseña es muy débil");
+      } else if (fireErr.code === "auth/invalid-email") {
+        setError("Correo electrónico inválido");
+      } else {
+        setError(fireErr.message || "Error en el registro");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -53,12 +71,18 @@ const Register = () => {
       <Card className="auth-card">
 
         <h1 className="auth-logo">
-          LOGO
+          GameStore
         </h1>
 
         <h3 className="auth-title">
           Crear Cuenta
         </h3>
+
+        {error && (
+          <div className="auth-error">
+            {error}
+          </div>
+        )}
 
         <Form>
 
@@ -67,24 +91,27 @@ const Register = () => {
               type="email"
               placeholder="Correo electrónico"
               className="auth-input"
-              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setError(""); }}
             />
           </Form.Group>
 
           <Form.Group className="mb-4">
             <Form.Control
               type="password"
-              placeholder="Contraseña"
+              placeholder="Contraseña (mín. 6 caracteres)"
               className="auth-input"
-              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(""); }}
             />
           </Form.Group>
 
           <Button
             className="auth-button w-100"
             onClick={handleRegister}
+            disabled={isSubmitting}
           >
-            Registrarse
+            {isSubmitting ? "Registrando..." : "Registrarse"}
           </Button>
 
         </Form>
